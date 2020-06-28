@@ -7,20 +7,20 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [todos, setTodos] = useState({
     itens: [],
-    page: 1,
-    totalPages: 1000,
+    page: 0,
+    totalPages: 1,
   });
   const isLastVisible = useIsElementVisible(lastRef.current);
 
   useEffect(() => {
-    getMoreTodos(1);
+    getMoreTodos(todos.page + 1);
   }, []);
 
   useEffect(() => {
     if (isLastVisible) {
       getMoreTodos(todos.page + 1);
     }
-  }, [isLastVisible, todos.page]);
+  }, [isLastVisible]);
 
   const getMoreTodos = async (page) => {
     try {
@@ -35,17 +35,17 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h2>Lista de Todos</h2>
+    <div className="container">
+      <h2 className="title">Lorem ipsum's list</h2>
       {todos.itens.map(({ title }, index) => {
         return (
-          <div key={index}>
+          <div className="card-box" key={index}>
             <p>{title}</p>
           </div>
         );
       })}
       {!!todos.itens.length && <div ref={lastRef} />}
-      {isLoading && <p>CARREGANDO...</p>}
+      {isLoading && <p className="loading">Loading...</p>}
     </div>
   );
 };

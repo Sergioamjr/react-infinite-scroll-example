@@ -7,7 +7,6 @@ export default (el) => {
   };
 
   useEffect(() => {
-    console.log("call", el);
     const watch = new IntersectionObserver(callback);
     if (el) {
       watch.observe(el);
@@ -15,5 +14,5 @@ export default (el) => {
     }
   }, [el]);
 
-  return isVisible;
+  return isVisible && !!el;
 };
