@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect, useRef } from "react";
+import useIsElementVisible from "./hooks/useIsElementVisible";
+import { fetchTodos } from "./services";
 
-function App() {
+const App = () => {
+  const lastRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [todos, setTodos] = useState({
+    itens: [],
+    page: 1,
+    totalPages: 1000,
+  });
+  const isLastVisible = useIsElementVisible(lastRef.current);
+
+  useEffect(() => {
+    getMoreTodos(1);
+  }, []);
+
+  useEffect(() => {
+    if (isLastVisible) {
+      getMoreTodos(todos.page + 1);
+    }
+  }, [isLastVisible, todos.page]);
+
+  const getMoreTodos = async (page) => {
+    try {
+      setIsLoading(true);
+      const newTodos = await fetchTodos(page);
+      setTodos((prev) => ({
+        ...newTodos,
+        itens: prev.itens.concat(newTodos.itens),
+      }));
+      setIsLoading(false);
+    } catch (err) {}
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Lista de Todos</h2>
+      {todos.itens.map(({ title }, index) => {
+        return (
+          <div key={index}>
+            <p>{title}</p>
+          </div>
+        );
+      })}
+      {!!todos.itens.length && <div ref={lastRef} />}
+      {isLoading && <p>CARREGANDO...</p>}
     </div>
   );
-}
+};
 
 export default App;
