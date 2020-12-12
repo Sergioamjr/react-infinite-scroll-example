@@ -14,12 +14,14 @@ export default function App() {
 
   useEffect(() => {
     getMoreTodos(todos.page + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (isLastVisible) {
       getMoreTodos(todos.page + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLastVisible]);
 
   const getMoreTodos = async (page) => {
