@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import useIsElementVisible from "./hooks/useIsElementVisible";
 import { fetchTodos } from "./services";
 
-const App = () => {
+export default function App() {
   const lastRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [todos, setTodos] = useState({
@@ -44,10 +44,10 @@ const App = () => {
           </div>
         );
       })}
-      {!!todos.itens.length && <div ref={lastRef} />}
+      {!!todos.itens.length && todos.page < todos.totalPages && (
+        <div ref={lastRef} />
+      )}
       {isLoading && <p className="loading">Loading...</p>}
     </div>
   );
-};
-
-export default App;
+}
